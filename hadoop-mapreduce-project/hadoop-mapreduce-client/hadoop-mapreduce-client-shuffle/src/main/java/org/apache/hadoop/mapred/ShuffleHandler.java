@@ -259,6 +259,7 @@ public class ShuffleHandler extends AbstractService
     pipelineFact.SHUFFLE.setPort(port);
     LOG.info(getName() + " listening on port " + port);
     super.start();
+    LOG.info("**JEFF: ShuffleHandler has started!**");
   }
 
   @Override
