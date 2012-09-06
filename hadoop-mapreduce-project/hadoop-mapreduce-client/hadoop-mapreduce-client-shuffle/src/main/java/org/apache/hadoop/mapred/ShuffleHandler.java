@@ -109,7 +109,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 public class ShuffleHandler extends AbstractService 
     implements AuxServices.AuxiliaryService {
 
-  private static final Log LOG = LogFactory.getLog(ShuffleHandler.class);
+  private static final com.sun.tools.javac.util.Log LOG = LogFactory.getLog(ShuffleHandler.class);
 
   private int port;
   private ChannelFactory selector;
@@ -352,7 +352,7 @@ public class ShuffleHandler extends AbstractService
             "\n  reduceId: " + reduceQ +
             "\n  jobId: " + jobQ);
       }
-
+      
       if (mapIds == null || reduceQ == null || jobQ == null) {
         sendError(ctx, "Required param job, map and reduce", BAD_REQUEST);
         return;
@@ -379,6 +379,16 @@ public class ShuffleHandler extends AbstractService
         sendError(ctx, FORBIDDEN);
         return;
       }
+      
+      // jtr
+      String strace = "";
+      for (StackTraceElement ste : Thread.currentThread().getStackTrace())
+      	strace += (" " + ste);
+      LOG.info("<jtr> ShuffleHandler:messageReceived " +
+    		  "JOBID: [" + jobQ + "] " + 
+    		  "[remote: " + evt.getRemoteAddress() + "]" + 
+    		  " due to stack:" + strace);
+      
       HttpResponse response = new DefaultHttpResponse(HTTP_1_1, OK);
       try {
         verifyRequest(jobId, ctx, request, response,
@@ -497,6 +507,17 @@ public class ShuffleHandler extends AbstractService
         });
       metrics.shuffleConnections.incr();
       metrics.shuffleOutputBytes.incr(info.partLength); // optimistic
+      
+      // jtr
+      String strace = "";
+      for (StackTraceElement ste : Thread.currentThread().getStackTrace())
+      	strace += (" " + ste);
+      LOG.info("<jtr> ShuffleHandler:sendMapOutput " +
+    		  "JOBID: [" + jobQ + "] " + 
+    		  "[local: " + ch.getLocalAddress() + 
+    		  " remote: " + ch.getRemoteAddress() + "]" + 
+    		  " due to stack:" + strace);
+      
       return writeFuture;
     }
 
