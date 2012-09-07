@@ -109,7 +109,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 public class ShuffleHandler extends AbstractService 
     implements AuxServices.AuxiliaryService {
 
-  private static final com.sun.tools.javac.util.Log LOG = LogFactory.getLog(ShuffleHandler.class);
+  private static final Log LOG = LogFactory.getLog(ShuffleHandler.class);
 
   private int port;
   private ChannelFactory selector;
@@ -259,7 +259,6 @@ public class ShuffleHandler extends AbstractService
     pipelineFact.SHUFFLE.setPort(port);
     LOG.info(getName() + " listening on port " + port);
     super.start();
-    LOG.info("**JEFF: ShuffleHandler has started!**");
   }
 
   @Override
@@ -385,7 +384,7 @@ public class ShuffleHandler extends AbstractService
       for (StackTraceElement ste : Thread.currentThread().getStackTrace())
       	strace += (" " + ste);
       LOG.info("<jtr> ShuffleHandler:messageReceived " +
-    		  "JOBID: [" + jobQ + "] " + 
+    		  "JOBID: [" + jobQ.toString() + "] " +
     		  "[remote: " + evt.getRemoteAddress() + "]" + 
     		  " due to stack:" + strace);
       
@@ -513,7 +512,7 @@ public class ShuffleHandler extends AbstractService
       for (StackTraceElement ste : Thread.currentThread().getStackTrace())
       	strace += (" " + ste);
       LOG.info("<jtr> ShuffleHandler:sendMapOutput " +
-    		  "JOBID: [" + jobQ + "] " + 
+    		  "JOBID: [" + jobID + "] " + 
     		  "[local: " + ch.getLocalAddress() + 
     		  " remote: " + ch.getRemoteAddress() + "]" + 
     		  " due to stack:" + strace);
