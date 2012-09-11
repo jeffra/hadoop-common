@@ -21,6 +21,9 @@ package org.apache.hadoop.yarn.api.impl.pb.client;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.JobThreadLocal;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ipc.ProtobufRpcEngine;
 import org.apache.hadoop.ipc.RPC;
@@ -51,6 +54,8 @@ import com.google.protobuf.ServiceException;
 
 public class ContainerManagerPBClientImpl implements ContainerManager {
 
+	private static final Log LOG = LogFactory.getLog(ContainerManagerPBClientImpl.class);
+	
   // Not a documented config. Only used for tests
   static final String NM_COMMAND_TIMEOUT = YarnConfiguration.YARN_PREFIX
       + "rpc.nm-command-timeout";
@@ -92,6 +97,11 @@ public class ContainerManagerPBClientImpl implements ContainerManager {
   @Override
   public StartContainerResponse startContainer(StartContainerRequest request)
       throws YarnRemoteException {
+	  String jobId = JobThreadLocal.get().getJobId();
+	  if (jobId == null)
+		  jobId = "UNKNOWN";
+	  LOG.info("<jobid-tag> jobid: " + jobId);
+
     StartContainerRequestProto requestProto = ((StartContainerRequestPBImpl)request).getProto();
     try {
       return new StartContainerResponsePBImpl(proxy.startContainer(null, requestProto));
