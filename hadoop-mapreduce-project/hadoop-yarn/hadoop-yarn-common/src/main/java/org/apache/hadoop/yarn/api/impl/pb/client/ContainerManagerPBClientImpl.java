@@ -105,7 +105,7 @@ public class ContainerManagerPBClientImpl implements ContainerManager {
 	  if (ctx != null && ctx.getJobId() != null)
 		  jobId = ctx.getJobId();
 	  LOG.info("<jobid-tag> " + ContainerManagerPBClientImpl.class.getName() + "jobid: " + jobId + ", ThreadName: " + Thread.currentThread().getName());
-
+	  
     StartContainerRequestProto requestProto = ((StartContainerRequestPBImpl)request).getProto();
     try {
       return new StartContainerResponsePBImpl(proxy.startContainer(null, requestProto));

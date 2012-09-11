@@ -31,6 +31,8 @@ import javax.net.SocketFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.JobContext;
+import org.apache.hadoop.JobThreadLocal;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
@@ -44,6 +46,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.SecretManager;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.util.ProtoUtil;
+import org.apache.hadoop.yarn.api.impl.pb.client.ContainerManagerPBClientImpl;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.BlockingService;
@@ -178,6 +181,14 @@ public class ProtobufRpcEngine implements RpcEngine {
         startTime = System.currentTimeMillis();
       }
 
+	  //jtr
+	  JobContext ctx = JobThreadLocal.get();
+	  String jobId = "UNKNOWN";
+	  if (ctx != null && ctx.getJobId() != null)
+		  jobId = ctx.getJobId();
+	  LOG.info("<jobid-tag> " + ProtobufRpcEngine.class.getName() + "jobid: " + jobId + ", ThreadName: " + Thread.currentThread().getName());
+
+      
       HadoopRpcRequestProto rpcRequest = constructRpcRequest(method, args);
       RpcResponseWritable val = null;
       try {
