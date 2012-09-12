@@ -1,4 +1,4 @@
-package org.apache.hadoop.security.authentication.util;
+package org.apache.hadoop.trace;
 
 public class JobThreadLocal {
 	public static final ThreadLocal<JobContext> userThreadLocal = new ThreadLocal<JobContext>();

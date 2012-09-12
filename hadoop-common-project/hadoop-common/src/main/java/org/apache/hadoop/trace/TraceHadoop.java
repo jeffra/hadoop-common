@@ -1,4 +1,4 @@
-package org.apache.hadoop.security.authentication.util;
+package org.apache.hadoop.trace;
 
 import org.apache.commons.logging.Log;
 import org.slf4j.Logger;

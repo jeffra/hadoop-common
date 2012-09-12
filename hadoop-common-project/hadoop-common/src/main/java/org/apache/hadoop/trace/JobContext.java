@@ -1,4 +1,4 @@
-package org.apache.hadoop.security.authentication.util;
+package org.apache.hadoop.trace;
 
 public class JobContext {
 

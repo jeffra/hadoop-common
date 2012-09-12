@@ -28,7 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FSInputStream;
 import org.apache.hadoop.hdfs.server.namenode.StreamFile;
-import org.apache.hadoop.security.authentication.util.TraceHadoop;
+import org.apache.hadoop.trace.TraceHadoop;
 
 import com.google.common.annotations.VisibleForTesting;
 
