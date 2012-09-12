@@ -33,7 +33,7 @@ import java.util.LinkedList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.classification.TraceHadoop;
+import org.apache.hadoop.security.authentication.util.TraceHadoop;
 
 /**
  * This supports input and output streams for a socket channels. 
