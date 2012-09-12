@@ -14,6 +14,7 @@
 package org.apache.hadoop.security.authentication.client;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.hadoop.TraceHadoop;
 import org.apache.hadoop.security.authentication.util.KerberosUtil;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSManager;
@@ -141,7 +142,9 @@ public class KerberosAuthenticator implements Authenticator {
       conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod(AUTH_HTTP_METHOD);
       conn.connect();
-      LOG.info("<trace-tag> LoggingSocket KerberosAuth made a quick connection 1 to " + conn);      
+
+      TraceHadoop.logTrace(LOG, "LoggingSocket KerberosAuth made a quick connection 1 to " + conn);
+      
       if (isNegotiate()) {
         doSpnegoSequence(token);
       } else {
@@ -252,7 +255,7 @@ public class KerberosAuthenticator implements Authenticator {
     conn.setRequestMethod(AUTH_HTTP_METHOD);
     conn.setRequestProperty(AUTHORIZATION, NEGOTIATE + " " + token);
     conn.connect();
-    LOG.info("<trace-tag> LoggingSocket KerberosAuth made a quick connection 2 to " + conn);     
+    TraceHadoop.logTrace(LOG, "LoggingSocket KerberosAuth made a quick connection 2 to " + conn);
   }
 
   /*

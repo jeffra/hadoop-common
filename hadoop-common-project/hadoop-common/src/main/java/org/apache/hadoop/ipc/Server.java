@@ -61,6 +61,7 @@ import javax.security.sasl.SaslServer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.TraceHadoop;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configuration.IntegerRanges;
@@ -467,11 +468,7 @@ public abstract class Server {
       this.setName("IPC Server listener on " + port);
       this.setDaemon(true);
      
-      String strace = "";
-      for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-        strace += (" " + ste);
-      }
-      LOG.info("<trace-tag> LoggingSocket new Listener started on port " + port + " due to stack:" + strace);
+      TraceHadoop.logTrace(LOG, "new Listener started on port: " + port);
     }
     
     private class Reader extends Thread {
