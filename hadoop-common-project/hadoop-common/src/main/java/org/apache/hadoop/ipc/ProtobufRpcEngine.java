@@ -179,11 +179,6 @@ public class ProtobufRpcEngine implements RpcEngine {
       if (LOG.isDebugEnabled()) {
         startTime = System.currentTimeMillis();
       }
-
-	  //jtr
-	  LOG.info("<jobid-tag> " + ProtobufRpcEngine.class.getName() + ", " +  
-			  "jobid: " + JobThreadLocal.getJobId() + ", " +  
-			  "ThreadName: " + Thread.currentThread().getName());
       
       HadoopRpcRequestProto rpcRequest = constructRpcRequest(method, args);
       RpcResponseWritable val = null;
