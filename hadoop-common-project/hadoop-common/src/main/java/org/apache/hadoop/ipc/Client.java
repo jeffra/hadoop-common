@@ -69,6 +69,8 @@ import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.security.token.TokenSelector;
 import org.apache.hadoop.security.token.TokenInfo;
+import org.apache.hadoop.trace.JobContext;
+import org.apache.hadoop.trace.JobThreadLocal;
 import org.apache.hadoop.util.ProtoUtil;
 import org.apache.hadoop.util.ReflectionUtils;
 
@@ -852,9 +854,23 @@ public class Client {
         int callId = response.getCallId();
         if (LOG.isDebugEnabled())
           LOG.debug(getName() + " got value #" + callId);
-
+        
         Call call = calls.get(callId);
         RpcStatusProto status = response.getStatus();
+        
+        if (response.hasTraceJobId()) {
+        	String newJobId = response.getTraceJobId(); 
+        	if (JobThreadLocal.isSet()) {
+        		LOG.error("<trace-tag> JobId is already set! " + 
+        				"Current-JobId: " + JobThreadLocal.getJobId() + ", " + 
+        				"New-JobId: " + newJobId);
+        	} else {
+        		LOG.info("<trace-tag> JobId was not previously set, first time setting! " + 
+        				"jobId: " + newJobId);
+        	}
+        	JobThreadLocal.set(new JobContext(newJobId));
+        }
+        
         if (status == RpcStatusProto.SUCCESS) {
           Writable value = ReflectionUtils.newInstance(valueClass, conf);
           value.readFields(in);                 // read value

@@ -92,6 +92,7 @@ import org.apache.hadoop.security.authorize.ServiceAuthorizationManager;
 import org.apache.hadoop.security.token.SecretManager;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.TokenIdentifier;
+import org.apache.hadoop.trace.JobThreadLocal;
 import org.apache.hadoop.trace.TraceHadoop;
 import org.apache.hadoop.util.ProtoUtil;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -1881,7 +1882,8 @@ public abstract class Server {
     response.setCallId(call.callId);
     response.setStatus(status);
 
-
+    response.setTraceJobId(JobThreadLocal.getJobId());
+    
     if (status == RpcStatusProto.SUCCESS) {
       try {
         response.build().writeDelimitedTo(out);

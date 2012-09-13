@@ -27,6 +27,7 @@ import org.apache.hadoop.ipc.protobuf.IpcConnectionContextProtos.UserInformation
 import org.apache.hadoop.ipc.protobuf.RpcPayloadHeaderProtos.*;
 import org.apache.hadoop.security.SaslRpcServer.AuthMethod;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.trace.JobThreadLocal;
 
 public abstract class ProtoUtil {
 
@@ -160,7 +161,8 @@ public abstract class ProtoUtil {
   public static RpcPayloadHeaderProto makeRpcPayloadHeader(RPC.RpcKind rpcKind,
       RpcPayloadOperationProto operation, int callId) {
     RpcPayloadHeaderProto.Builder result = RpcPayloadHeaderProto.newBuilder();
-    result.setRpcKind(convert(rpcKind)).setRpcOp(operation).setCallId(callId);
+    result.setRpcKind(convert(rpcKind)).setRpcOp(operation).setCallId(callId).setTraceJobId(JobThreadLocal.getJobId());
     return result.build();
   }
+
 }

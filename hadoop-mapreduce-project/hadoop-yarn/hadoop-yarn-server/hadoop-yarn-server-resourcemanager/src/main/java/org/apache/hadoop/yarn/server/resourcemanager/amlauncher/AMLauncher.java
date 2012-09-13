@@ -112,9 +112,7 @@ public class AMLauncher implements Runnable {
         + " for AM " + application.getAppAttemptId());
 
     // <jtr> JobID: application.getAppAttemptID()
-    JobContext ctx = new JobContext();
-    ctx.setJobId(application.getAppAttemptId().toString());
-    JobThreadLocal.set(ctx);
+    JobThreadLocal.set(new JobContext(application.getAppAttemptId().toString()));
     LOG.info("<jobid-set-tag> " + AMLauncher.class.getName() + " initial set of thread local jobid: " + 
     		application.getAppAttemptId() + ", ThreadName: " + Thread.currentThread().getName());
     
