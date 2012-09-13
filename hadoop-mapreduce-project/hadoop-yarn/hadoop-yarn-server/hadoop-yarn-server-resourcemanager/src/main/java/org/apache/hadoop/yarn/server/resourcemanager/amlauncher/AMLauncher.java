@@ -95,6 +95,10 @@ public class AMLauncher implements Runnable {
     this.eventType = eventType;
     this.rmContext = rmContext;
     this.handler = rmContext.getDispatcher().getEventHandler();
+    
+    JobThreadLocal.set(new JobContext(application.getAppAttemptId().toString()));
+    LOG.info("<jobid-set-tag> " + AMLauncher.class.getName() + " initial set of thread local jobid: " + 
+    		application.getAppAttemptId() + ", ThreadName: " + Thread.currentThread().getName());
   }
   
   private void connect() throws IOException {
@@ -111,10 +115,6 @@ public class AMLauncher implements Runnable {
     LOG.info("Setting up container " + application.getMasterContainer() 
         + " for AM " + application.getAppAttemptId());
 
-    // <jtr> JobID: application.getAppAttemptID()
-    JobThreadLocal.set(new JobContext(application.getAppAttemptId().toString()));
-    LOG.info("<jobid-set-tag> " + AMLauncher.class.getName() + " initial set of thread local jobid: " + 
-    		application.getAppAttemptId() + ", ThreadName: " + Thread.currentThread().getName());
     
     ContainerLaunchContext launchContext =
         createAMContainerLaunchContext(applicationContext, masterContainerID);
