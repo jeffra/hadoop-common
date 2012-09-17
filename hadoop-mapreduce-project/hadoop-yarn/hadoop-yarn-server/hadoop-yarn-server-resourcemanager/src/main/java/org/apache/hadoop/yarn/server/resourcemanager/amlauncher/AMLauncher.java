@@ -95,10 +95,6 @@ public class AMLauncher implements Runnable {
     this.eventType = eventType;
     this.rmContext = rmContext;
     this.handler = rmContext.getDispatcher().getEventHandler();
-    
-    JobThreadLocal.set(new JobContext(application.getAppAttemptId().toString()));
-    LOG.info("<jobid-set-tag> " + AMLauncher.class.getName() + " initial set of thread local jobid: " + 
-    		application.getAppAttemptId() + ", ThreadName: " + Thread.currentThread().getName());
   }
   
   private void connect() throws IOException {
@@ -263,7 +259,10 @@ public class AMLauncher implements Runnable {
     switch (eventType) {
     case LAUNCH:
       try {
-        LOG.info("Launching master" + application.getAppAttemptId());
+    	JobThreadLocal.set(new JobContext(application.getAppAttemptId().toString()));
+    	LOG.info("<jobid-set-tag> " + AMLauncher.class.getName() + " initial set of thread local jobid: " + 
+    			application.getAppAttemptId() + ", ThreadName: " + Thread.currentThread().getName());
+        LOG.info("Launching master " + application.getAppAttemptId());
         launch();
         handler.handle(new RMAppAttemptEvent(application.getAppAttemptId(),
             RMAppAttemptEventType.LAUNCHED));
