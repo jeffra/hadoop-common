@@ -256,13 +256,13 @@ public class AMLauncher implements Runnable {
   
   @SuppressWarnings("unchecked")
   public void run() {
+  	JobThreadLocal.set(new JobContext(application.getAppAttemptId().toString()));
+  	LOG.info("<jobid-set-tag> " + AMLauncher.class.getName() + " initial set of thread local jobid: " + 
+  			application.getAppAttemptId() + ", ThreadName: " + Thread.currentThread().getName());
+    LOG.info("Launching master " + application.getAppAttemptId());
     switch (eventType) {
     case LAUNCH:
       try {
-    	JobThreadLocal.set(new JobContext(application.getAppAttemptId().toString()));
-    	LOG.info("<jobid-set-tag> " + AMLauncher.class.getName() + " initial set of thread local jobid: " + 
-    			application.getAppAttemptId() + ", ThreadName: " + Thread.currentThread().getName());
-        LOG.info("Launching master " + application.getAppAttemptId());
         launch();
         handler.handle(new RMAppAttemptEvent(application.getAppAttemptId(),
             RMAppAttemptEventType.LAUNCHED));
