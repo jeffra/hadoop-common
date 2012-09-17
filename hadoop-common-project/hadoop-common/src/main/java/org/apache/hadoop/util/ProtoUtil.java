@@ -161,7 +161,7 @@ public abstract class ProtoUtil {
   public static RpcPayloadHeaderProto makeRpcPayloadHeader(RPC.RpcKind rpcKind,
       RpcPayloadOperationProto operation, int callId) {
     RpcPayloadHeaderProto.Builder result = RpcPayloadHeaderProto.newBuilder();
-    result.setRpcKind(convert(rpcKind)).setRpcOp(operation).setCallId(callId).setTraceJobId(JobThreadLocal.getJobId());
+    result.setRpcKind(convert(rpcKind)).setRpcOp(operation).setCallId(callId);
     return result.build();
   }
 

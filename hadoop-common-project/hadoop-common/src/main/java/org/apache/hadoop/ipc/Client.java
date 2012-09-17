@@ -857,20 +857,7 @@ public class Client {
         
         Call call = calls.get(callId);
         RpcStatusProto status = response.getStatus();
-        
-        if (response.hasTraceJobId()) {
-        	String newJobId = response.getTraceJobId(); 
-        	if (JobThreadLocal.isSet()) {
-        		LOG.error("<trace-tag> JobId is already set! " + 
-        				"Current-JobId: " + JobThreadLocal.getJobId() + ", " + 
-        				"New-JobId: " + newJobId);
-        	} else {
-        		LOG.info("<trace-tag> JobId was not previously set, first time setting! " + 
-        				"jobId: " + newJobId);
-        	}
-        	JobThreadLocal.set(new JobContext(newJobId));
-        }
-        
+                
         if (status == RpcStatusProto.SUCCESS) {
           Writable value = ReflectionUtils.newInstance(valueClass, conf);
           value.readFields(in);                 // read value

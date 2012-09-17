@@ -1881,8 +1881,6 @@ public abstract class Server {
         RpcResponseHeaderProto.newBuilder();
     response.setCallId(call.callId);
     response.setStatus(status);
-
-    response.setTraceJobId(JobThreadLocal.getJobId());
     
     if (status == RpcStatusProto.SUCCESS) {
       try {
