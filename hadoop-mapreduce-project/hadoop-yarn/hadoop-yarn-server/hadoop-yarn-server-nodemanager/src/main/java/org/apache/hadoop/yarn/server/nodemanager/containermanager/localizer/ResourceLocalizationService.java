@@ -70,6 +70,8 @@ import org.apache.hadoop.fs.FileContext;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.trace.JobContext;
+import org.apache.hadoop.trace.JobThreadLocal;
 import org.apache.hadoop.yarn.YarnException;
 import org.apache.hadoop.yarn.event.Dispatcher;
 import org.apache.hadoop.yarn.event.EventHandler;
@@ -859,11 +861,11 @@ public class ResourceLocalizationService extends CompositeService
         List<String> localDirs = dirsHandler.getLocalDirs();
         List<String> logDirs = dirsHandler.getLogDirs();
         if (dirsHandler.areDisksHealthy()) {
+          String jobId = ConverterUtils.toString(context.getContainerId().getApplicationAttemptId().getApplicationId());
+          JobThreadLocal.set(new JobContext(jobId));
           exec.startLocalizer(nmPrivateCTokensPath, localizationServerAddress,
               context.getUser(),
-              ConverterUtils.toString(
-                  context.getContainerId().
-                  getApplicationAttemptId().getApplicationId()),
+              jobId,
               localizerId, localDirs, logDirs);
         } else {
           throw new IOException("All disks failed. "
