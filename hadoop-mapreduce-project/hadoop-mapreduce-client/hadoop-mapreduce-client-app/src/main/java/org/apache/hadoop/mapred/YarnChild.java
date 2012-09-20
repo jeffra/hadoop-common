@@ -56,10 +56,12 @@ import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
+import org.apache.hadoop.trace.JobThreadLocal;
 import org.apache.hadoop.util.DiskChecker.DiskErrorException;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.yarn.api.ApplicationConstants;
 import org.apache.log4j.LogManager;
+import org.apache.hadoop.trace.JobContext;
 
 /**
  * The main() for MapReduce task processes.
@@ -83,9 +85,13 @@ class YarnChild {
         NetUtils.createSocketAddrForHost(host, port);
     final TaskAttemptID firstTaskid = TaskAttemptID.forName(args[2]);
     int jvmIdInt = Integer.parseInt(args[3]);
-    JVMId jvmId = new JVMId(firstTaskid.getJobID(),
+    JobID jobId = firstTaskid.getJobID();
+    JVMId jvmId = new JVMId(jobId,
         firstTaskid.getTaskType() == TaskType.MAP, jvmIdInt);
 
+    // Store jobId for later
+    JobThreadLocal.set(new JobContext(jobId.toString()));
+    
     // initialize metrics
     DefaultMetricsSystem.initialize(
         StringUtils.camelize(firstTaskid.getTaskType().name()) +"Task");
