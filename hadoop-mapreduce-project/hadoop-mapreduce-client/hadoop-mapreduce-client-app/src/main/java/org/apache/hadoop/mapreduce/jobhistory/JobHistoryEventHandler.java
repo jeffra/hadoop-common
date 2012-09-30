@@ -52,6 +52,8 @@ import org.apache.hadoop.mapreduce.v2.jobhistory.FileNameIndexUtils;
 import org.apache.hadoop.mapreduce.v2.jobhistory.JobHistoryUtils;
 import org.apache.hadoop.mapreduce.v2.jobhistory.JobIndexInfo;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.trace.JobContext;
+import org.apache.hadoop.trace.JobThreadLocal;
 import org.apache.hadoop.yarn.YarnException;
 import org.apache.hadoop.yarn.event.EventHandler;
 import org.apache.hadoop.yarn.service.AbstractService;
@@ -131,6 +133,8 @@ public class JobHistoryEventHandler extends AbstractService
       throw new YarnException(e);
     }
 
+    JobThreadLocal.set(new JobContext(context.getApplicationID().toString()));
+    
     //Check for the existence of the history staging dir. Maybe create it. 
     try {
       stagingDirPath =
