@@ -46,6 +46,8 @@ import org.apache.hadoop.mapreduce.MRJobConfig;
 import org.apache.hadoop.mapreduce.TaskAttemptID;
 import org.apache.hadoop.mapreduce.security.SecureShuffleUtils;
 import org.apache.hadoop.mapreduce.task.reduce.MapOutput.Type;
+import org.apache.hadoop.trace.JobContext;
+import org.apache.hadoop.trace.JobThreadLocal;
 import org.apache.hadoop.trace.TraceHadoop;
 import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -97,7 +99,10 @@ class Fetcher<K,V> extends Thread {
                  ShuffleScheduler<K,V> scheduler, MergeManager<K,V> merger,
                  Reporter reporter, ShuffleClientMetrics metrics,
                  ExceptionReporter exceptionReporter, SecretKey jobTokenSecret) {
-    this.reporter = reporter;
+	
+	JobThreadLocal.set(new JobContext(reduceId.getJobID().toString()));
+	  
+	this.reporter = reporter;
     this.scheduler = scheduler;
     this.merger = merger;
     this.metrics = metrics;
@@ -149,7 +154,7 @@ class Fetcher<K,V> extends Thread {
           // Get a host to shuffle from
           host = scheduler.getHost();
           metrics.threadBusy();
-
+          
           // Shuffle
           copyFromHost(host);
         } finally {
@@ -183,7 +188,9 @@ class Fetcher<K,V> extends Thread {
    *              shuffle available map-outputs.
    */
   private void copyFromHost(MapHost host) throws IOException {
-    // Get completed maps on 'host'
+    
+	  
+	// Get completed maps on 'host'
     List<TaskAttemptID> maps = scheduler.getMapsForHost(host);
     
     // Sanity check to catch hosts with only 'OBSOLETE' maps, 
