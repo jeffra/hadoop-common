@@ -318,8 +318,8 @@ class DataXceiver extends Receiver implements Runnable {
     final boolean isTransfer = stage == BlockConstructionStage.TRANSFER_RBW
         || stage == BlockConstructionStage.TRANSFER_FINALIZED;
 
-    JobThreadLocal.set(new JobContext(clientname));
-    LOG.info("<debug-tag> JobID: " + clientname);
+    if (clientname.contains("attempt"))
+    	JobThreadLocal.set(new JobContext(clientname));
         
     // check single target for transfer-RBW/Finalized 
     if (isTransfer && targets.length > 0) {
