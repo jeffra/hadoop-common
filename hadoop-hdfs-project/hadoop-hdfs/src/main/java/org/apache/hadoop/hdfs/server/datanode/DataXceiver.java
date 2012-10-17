@@ -63,8 +63,6 @@ import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.net.SocketInputWrapper;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.Token;
-import org.apache.hadoop.trace.JobContext;
-import org.apache.hadoop.trace.JobThreadLocal;
 import org.apache.hadoop.util.DataChecksum;
 
 import com.google.protobuf.ByteString;
@@ -158,8 +156,6 @@ class DataXceiver extends Receiver implements Runnable {
       do {
         updateCurrentThreadName("Waiting for operation #" + (opsProcessed + 1));
 
-        JobThreadLocal.set(new JobContext(previousOpClientName));
-        
         try {
           if (opsProcessed != 0) {
             assert dnConf.socketKeepaliveTimeout > 0;
