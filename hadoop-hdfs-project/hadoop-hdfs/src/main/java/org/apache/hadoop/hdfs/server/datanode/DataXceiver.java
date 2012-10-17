@@ -318,6 +318,9 @@ class DataXceiver extends Receiver implements Runnable {
     final boolean isTransfer = stage == BlockConstructionStage.TRANSFER_RBW
         || stage == BlockConstructionStage.TRANSFER_FINALIZED;
 
+    JobThreadLocal.set(new JobContext(clientname));
+    LOG.info("<debug-tag> JobID: " + clientname);
+        
     // check single target for transfer-RBW/Finalized 
     if (isTransfer && targets.length > 0) {
       throw new IOException(stage + " does not support multiple targets "
